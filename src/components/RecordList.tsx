@@ -1,0 +1,179 @@
+import { useState } from 'react'
+import type { ExpenseRecord, User } from '../types'
+import { formatAmount } from '../utils/balanceCalculator'
+import { getUserAlias, formatDate } from '../utils/formatting'
+
+interface RecordListProps {
+  records: ExpenseRecord[]
+  users: User[]
+  currentUserEmail?: string
+  onEdit: (record: ExpenseRecord) => void
+  onDelete: (uuid: string) => void
+  onShare?: (record: ExpenseRecord) => void
+}
+
+export function RecordList({
+  records,
+  users,
+  currentUserEmail,
+  onEdit,
+  onDelete,
+  onShare,
+}: RecordListProps) {
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null)
+
+  const isUserInvolved = (record: ExpenseRecord) => {
+    if (!currentUserEmail) return true // If no current user, don't show indicator
+    const inPaidBy = record.paidBy.some((p) => p.email === currentUserEmail)
+    const inPaidFor = record.paidFor.some((p) => p.email === currentUserEmail)
+    return inPaidBy || inPaidFor
+  }
+
+  // Group records by date
+  const groupedRecords = records.reduce<{ [key: string]: ExpenseRecord[] }>((acc, record) => {
+    const date = record.date
+    if (!acc[date]) {
+      acc[date] = []
+    }
+    acc[date].push(record)
+    return acc
+  }, {})
+
+  const sortedDates = Object.keys(groupedRecords).sort((a, b) => b.localeCompare(a))
+
+  return (
+    <div className="space-y-6">
+      {sortedDates.map((date) => (
+        <div key={date}>
+          <h3 className="mb-3 text-sm font-medium text-content-secondary">{formatDate(date)}</h3>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {groupedRecords[date].map((record) => {
+              const involved = isUserInvolved(record)
+              return (
+                <div
+                  key={record.uuid}
+                  className={`relative cursor-pointer rounded-2xl border p-4 transition-all hover:shadow-sm ${
+                    involved
+                      ? 'border-border-default bg-surface hover:border-content-tertiary'
+                      : 'border-dashed border-content-tertiary/50 bg-surface-tertiary/30 hover:border-content-tertiary'
+                  }`}
+                  onClick={() => onEdit(record)}
+                >
+                  {/* Menu button - top right */}
+                  <div className="absolute right-2 top-2">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setOpenMenuId(openMenuId === record.uuid ? null : record.uuid)
+                      }}
+                      className="flex h-8 w-8 items-center justify-center rounded-lg text-content-secondary transition-colors hover:bg-surface-tertiary"
+                    >
+                      <span className="text-lg">⋯</span>
+                    </button>
+
+                    {openMenuId === record.uuid && (
+                      <>
+                        <div
+                          className="fixed inset-0 z-10"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setOpenMenuId(null)
+                          }}
+                        />
+                        <div className="absolute right-0 top-full z-20 mt-1 w-40 rounded-xl border border-border-default bg-surface p-2 shadow-lg">
+                          {onShare && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setOpenMenuId(null)
+                                onShare(record)
+                              }}
+                              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-content hover:bg-surface-tertiary"
+                            >
+                              <span>🔗</span>
+                              <span>Share</span>
+                            </button>
+                          )}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              setOpenMenuId(null)
+                              onEdit(record)
+                            }}
+                            className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-content hover:bg-surface-tertiary"
+                          >
+                            <span>✏️</span>
+                            <span>Edit</span>
+                          </button>
+                          <div className="my-1 border-t border-border-default" />
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              setOpenMenuId(null)
+                              onDelete(record.uuid)
+                            }}
+                            className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10"
+                          >
+                            <span>🗑️</span>
+                            <span>Delete</span>
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+
+                  <div className="flex items-start justify-between gap-2 pr-8">
+                    <div className="flex min-w-0 flex-1 gap-3">
+                      <span
+                        className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl text-xl ${
+                          involved ? 'bg-surface-tertiary' : 'bg-surface-tertiary/50'
+                        }`}
+                      >
+                        {record.icon}
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          <p
+                            className={`truncate font-medium ${involved ? 'text-content' : 'text-content-secondary'}`}
+                          >
+                            {record.title}
+                          </p>
+                          {!involved && (
+                            <span className="flex-shrink-0 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700 dark:bg-amber-500/20 dark:text-amber-400">
+                              Not involved
+                            </span>
+                          )}
+                        </div>
+                        <p className="truncate text-sm text-content-secondary">
+                          {record.paidBy.length > 0 && (
+                            <>
+                              Paid by{' '}
+                              {record.paidBy.map((p) => getUserAlias(p.email, users)).join(', ')}
+                            </>
+                          )}
+                        </p>
+                        {record.paidFor.length > 0 && (
+                          <p className="truncate text-xs text-content-tertiary">
+                            For {record.paidFor.map((p) => getUserAlias(p.email, users)).join(', ')}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex-shrink-0 text-right">
+                      <p
+                        className={`font-semibold ${involved ? 'text-content' : 'text-content-secondary'}`}
+                      >
+                        {formatAmount(record.amount, record.currency)}
+                      </p>
+                      <p className="text-xs text-content-tertiary">{record.time}</p>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
