@@ -4,6 +4,7 @@
 
 FairShare is a privacy-first expense splitting app that lives entirely in your browser. Track shared expenses, split bills any way you like, and see exactly who owes whom — all without creating an account or sending your data anywhere.
 
+
 ---
 
 ## ✨ Features
@@ -14,24 +15,36 @@ FairShare is a privacy-first expense splitting app that lives entirely in your b
 - **Easy Sharing** — Export expenses as shareable URLs or files to sync with friends.
 - **Multi-Currency** — Track expenses in any currency across trips and groups.
 - **Smart Balances** — Automatically simplifies debts (if A owes B ₹100 and B owes A ₹30, it shows A owes B ₹70).
+- **Dark Mode** — Easy on the eyes, day or night.
+- **Receipt Scanner** — Snap or upload a receipt and let FairShare extract the details automatically.
+- **AI Chat Input** — Add expenses conversationally. Just type and it's logged.
+- **Activity Log** — Full expense history so nothing gets lost.
 
 ---
 
-## 🚀 Getting Started
+## 🤖 AI-Powered Expense Entry
 
-```bash
-# Clone the repository
-git clone https://github.com/your-username/fairshare.git
-cd fairshare
+No more filling out forms. Just describe your expense in plain language and FairShare will parse it automatically.
 
-# Install dependencies
-npm install
-
-# Start the development server
-npm run dev
+**Examples:**
+```
+Add Dinner at Hotel Star, ₹4420
+Paid ₹1200 for Uber, split with Raj and Priya
+Coffee for 3 people, ₹450, I paid
 ```
 
-Open `http://localhost:5173` in your browser and you're ready to go.
+FairShare extracts the amount, description, currency, and participants — and pre-fills the expense form for you to confirm.
+
+---
+
+## 🧾 Receipt & Bank Statement Scanner
+
+Point your camera at a receipt or upload an image — FairShare reads it and pulls out the key details.
+
+- **Supported formats:** JPEG, PNG, WebP, GIF (max 20MB)
+- **Input options:** Upload a file or take a photo directly
+- **Scan modes:** Receipt or Bank Statement
+- Auto-populates amount, merchant name, and date into a new expense record
 
 ---
 
@@ -46,6 +59,7 @@ Every expense entry captures:
 - **Who paid**
 - **Who it's for**
 - **How to split it**
+- **Attached receipt** (optional)
 
 ### Splitting Methods
 
@@ -59,31 +73,46 @@ Every expense entry captures:
 ### Balances
 FairShare automatically calculates net balances across all expenses in a group and simplifies them into the minimum number of transactions needed to settle up.
 
+### Activity Log
+Every add, edit, and delete is tracked in a full activity history so you always have context on how balances changed over time.
+
 ### Sharing
 - **Export as URL** — Generate a link that encodes your expense data, shareable via any messaging app.
 - **Export as File** — Save a `.fairshare` file and send it directly to collaborators.
 
 ---
 
-## 🏗️ Tech Stack
+## 🗺️ Roadmap
 
-- **Frontend** — [Your framework here, e.g., React / Vue / Svelte]
-- **Storage** — Browser IndexedDB (via [idb](https://github.com/jakearchibald/idb) or similar)
-- **Offline Support** — Service Worker / PWA
-- **Sharing** — URL encoding + File export
+- [x] Core expense tracking & splitting
+- [x] Group management
+- [x] Smart balance simplification
+- [x] Dark mode
+- [x] Receipt photo attachment & scanning
+- [x] Expense history & activity log
+- [x] AI chat-based expense entry
+- [ ] PWA install support
+- [ ] QR code sharing
+- [ ] Budget limits per group
+- [ ] Export to CSV / PDF
 
 ---
 
-## 🗺️ Roadmap
+## 🚀 Getting Started
 
-See [`SPEC/07-milestones.md`](SPEC/07-milestones.md) for the full development roadmap.
+```bash
+# Clone the repository
+git clone https://github.com/sanketbhuite/FairShare.git
+cd FairShare
 
-Planned features include:
-- [ ] PWA install support
-- [ ] QR code sharing
-- [ ] Expense history & activity log
-- [ ] Receipt photo attachment
-- [ ] Dark mode
+# Install dependencies
+npm install
+
+# Start the development server
+npm run dev
+```
+
+Open `http://localhost:5173` in your browser and you're ready to go.
 
 ---
 
@@ -101,7 +130,7 @@ Contributions are welcome! Please open an issue to discuss what you'd like to ch
 
 ## 📄 License
 
-MIT © [Your Name]
+MIT © [Sanket Bhuite](https://github.com/sanketbhuite)
 
 ---
 
