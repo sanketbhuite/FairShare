@@ -4,7 +4,7 @@
 
 FairShare is a privacy-first expense splitting app that lives entirely in your browser. Track shared expenses, split bills any way you like, and see exactly who owes whom — all without creating an account or sending your data anywhere.
 
-
+[![Netlify Status](https://api.netlify.com/api/v1/badges/49859637-d3ce-4fd4-9496-fa68f58dbea4/deploy-status)](https://app.netlify.com/projects/fairsharexpense/deploys)
 ---
 
 ## ✨ Features
