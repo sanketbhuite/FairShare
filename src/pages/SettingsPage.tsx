@@ -877,7 +877,7 @@ export function SettingsPage() {
             Found a bug or have a feature request?
           </p>
           <a
-            href={'https://github.com/' + 'sanket' + '/FairShare/issues/new'}
+            href={'https://github.com/' + 'sanketbhuite' + '/FairShare/issues/new'}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-4 inline-flex items-center gap-2 rounded-xl bg-surface-tertiary px-4 py-2.5 text-sm font-medium text-content transition-colors hover:bg-surface-hover"
